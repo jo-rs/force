@@ -10,6 +10,17 @@ import { artistMiddleware } from "./apps/artist/artistMiddleware"
 import { userRequiredMiddleware } from "./middleware/userRequiredMiddleware"
 import { searchMiddleware } from "./apps/search/searchMiddleware"
 
+const { promisify } = require("util")
+const redis = require("redis")
+const client = redis.createClient()
+
+const redisCache = {
+  get: promisify(client.get).bind(client),
+  set: promisify(client.set).bind(client),
+  del: promisify(client.del).bind(client),
+  flushall: promisify(client.flushall).bind(client),
+}
+
 export const app = express()
 
 /**
@@ -40,6 +51,12 @@ app.get(
     try {
       const pageParts = req.path.split("/")
       const pageType = pageParts[1]
+
+      const cachedRes = await redisCache.get(req.url)
+      if (cachedRes) {
+        res.status(200).send(cachedRes)
+        return
+      }
 
       const {
         status,
@@ -89,6 +106,7 @@ app.get(
       })
 
       res.locals.PAGE_CACHE = { status, key: req.url, html: layout }
+      await redisCache.set(req.url, layout)
       res.status(status).send(layout)
     } catch (error) {
       console.log(error)
