@@ -154,6 +154,12 @@ return {
     },
     {
       "kind": "LocalArgument",
+      "name": "sizes",
+      "type": "[ArtworkSizes]",
+      "defaultValue": null
+    },
+    {
+      "kind": "LocalArgument",
       "name": "sort",
       "type": "String",
       "defaultValue": "-partner_updated_at"
@@ -379,6 +385,11 @@ return {
           "name": "priceRange",
           "variableName": "priceRange"
         },
+        {
+          "kind": "Variable",
+          "name": "sizes",
+          "variableName": "sizes"
+        },
         (v2/*: any*/),
         {
           "kind": "Variable",
@@ -390,5 +401,5 @@ return {
   ]
 };
 })();
-(node as any).hash = '96962465417bf2a8f96711c0310fd960';
+(node as any).hash = '9c0ffdff36a094cab9f45fcc97a02e71';
 export default node;
