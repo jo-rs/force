@@ -120,7 +120,7 @@ workflows:
       # Pre-staging
       - yarn/jest:
           <<: *not_staging_or_release
-          args: --runInBand
+          args: --maxWorkers=2
 
       - yarn/run:
           <<: *not_staging_or_release
